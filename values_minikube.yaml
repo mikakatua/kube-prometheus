@@ -1,0 +1,35 @@
+alertmanager:
+  ingress:
+    enabled: true
+    hosts:
+      - alertmanager.192-168-49-2.nip.io
+    paths:
+      - /
+
+grafana:
+  adminPassword: admin
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.192-168-49-2.nip.io
+    path: /
+
+prometheus:
+  prometheusSpec:
+    secrets:
+    - etcd-certs
+  ingress:
+    enabled: true
+    hosts:
+      - prometheus.192-168-49-2.nip.io
+    paths:
+      - /
+
+kubeEtcd:
+  serviceMonitor:
+    scheme: https
+    insecureSkipVerify: false
+    caFile:   /etc/prometheus/secrets/etcd-certs/ca.crt
+    certFile: /etc/prometheus/secrets/etcd-certs/server.crt
+    keyFile:  /etc/prometheus/secrets/etcd-certs/server.key
+
