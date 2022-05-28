@@ -1,4 +1,4 @@
-# Testing the deployment on Kubernetes
+# Testing the Kube Prometheus Stack deployment
 Create a namespace for the deployment
 ```
 kubectl create ns monitoring
