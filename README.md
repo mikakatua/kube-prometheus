@@ -7,10 +7,12 @@ kubectl create ns monitoring
 ## Minikube
 We have to tweak a bit the configuration to avoid the failure of some monitored targets:
 ```
-kubectl create secret generic etcd-certs -n monitoring \
-  --from-literal=ca.crt="$(minikube ssh -- sudo cat /var/lib/minikube/certs/etcd/ca.crt)" \
-  --from-literal=server.crt="$(minikube ssh -- sudo cat /var/lib/minikube/certs/etcd/server.crt)" \
-  --from-literal=server.key="$(minikube ssh -- sudo cat /var/lib/minikube/certs/etcd/server.crt)"
+mkdir etcd-certs
+minikube ssh -- sudo cat /var/lib/minikube/certs/etcd/ca.crt > etcd-certs/ca.crt
+minikube ssh -- sudo cat /var/lib/minikube/certs/etcd/server.crt > etcd-certs/server.crt
+minikube ssh -- sudo cat /var/lib/minikube/certs/etcd/server.key > etcd-certs/server.key
+kubectl create secret generic etcd-certs -n monitoring --from-file=etcd-certs
+rm -rf etcd-certs
 
 minikube ssh -- sudo sed -i 's/bind-address=127.0.0.1/bind-address=0.0.0.0/' \
   /etc/kubernetes/manifests/kube-controller-manager.yaml \
