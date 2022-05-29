@@ -41,3 +41,7 @@ helm repo update
 helm upgrade --install kps prometheus-community/kube-prometheus-stack -n monitoring -f values_minikube.yaml
 ```
 
+### Argo CD deployment
+Find the Application manifests in the argocd directory
+
+**NOTE:** There is an issue with the creation of Kube Prometheus Stack CRDs. A possible solution is [this workaround](https://blog.ediri.io/kube-prometheus-stack-and-argocd-23-how-to-remove-a-workaround)

@@ -1,4 +1,12 @@
 alertmanager:
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: gluster
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi
   ingress:
     enabled: true
     hosts:
@@ -11,6 +19,13 @@ grafana:
   serviceMonitor:
     labels:
       release: kps
+  persistence:
+    type: pvc
+    enabled: true
+    # storageClassName: default
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
   ingress:
     enabled: true
     hosts:
@@ -21,6 +36,13 @@ prometheus:
   prometheusSpec:
     secrets:
     - etcd-certs
+    prometheusSpec:
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            resources:
+              requests:
+                storage: 5Gi 
   ingress:
     enabled: true
     hosts:
