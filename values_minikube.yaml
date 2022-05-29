@@ -8,6 +8,9 @@ alertmanager:
 
 grafana:
   adminPassword: admin
+  serviceMonitor:
+    labels:
+      release: kps
   ingress:
     enabled: true
     hosts:
