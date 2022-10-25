@@ -1,24 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring
+  name: rancher-monitoring
   namespace: argocd
 spec:
   source:
     path: argocd/apps
     repoURL: 'https://github.com/mikakatua/kube-prometheus-test.git'
-    targetRevision: develop
+    targetRevision: rancher
   destination:
     namespace: argocd
-    server: 'https://kubernetes.default.svc'
-  project: default
+    name: cluster1-node1
+  project: monitoring
   syncPolicy:
     automated:
-      prune: true
       selfHeal: true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        maxDuration: 3m0s
-        factor: 2

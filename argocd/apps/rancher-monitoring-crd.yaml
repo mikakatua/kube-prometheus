@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  name: monitoring-crd
+  namespace: argocd
+spec:
+  destination:
+    name: cluster1-node1
+    namespace: cattle-monitoring-system
+  project: monitoring
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  source:
+    repoURL: http://charts.rancher.io/
+    chart: rancher-monitoring-crd
+    targetRevision: 100.1.3+up19.0.3
+    helm:
+      releaseName: rancher-monitoring-crd
+      values: |-
+        global:
+          cattle:
+            clusterId: c-l6mmz
+            clusterName: cluster1
+            rkePathPrefix: ''
+            rkeWindowsPathPrefix: ''
+            systemDefaultRegistry: ''
+            systemProjectId: p-8pt65
+            url: https://rancher.mydomain.net
+          systemDefaultRegistry: ''
+
