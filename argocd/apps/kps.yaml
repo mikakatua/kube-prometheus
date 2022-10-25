@@ -1,0 +1,85 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  name: kps
+  namespace: argocd
+spec:
+  destination:
+    name: in-cluster
+    namespace: monitoring
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 41.6.0
+    helm:
+      releaseName: kps
+      skipCrds: true
+      values: |-
+        alertmanager:
+          alertmanagerSpec:
+            storage:
+              volumeClaimTemplate:
+                spec:
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 2Gi
+          ingress:
+            enabled: true
+            hosts:
+              - alertmanager.192-168-49-2.nip.io
+            paths:
+              - /
+
+        grafana:
+          defaultDashboardsTimezone: Europe/Berlin
+          adminPassword: admin
+          serviceMonitor:
+            labels:
+              release: kps
+          persistence:
+            type: pvc
+            enabled: true
+            accessModes:
+              - ReadWriteOnce
+            size: 2Gi
+          ingress:
+            enabled: true
+            hosts:
+              - grafana.192-168-49-2.nip.io
+            paths:
+              - /
+
+        prometheus:
+          additionalScrapeConfigsSecret:
+            key: prometheus-additional.yaml
+            name: additional-scrape-configs
+          thanosService:
+            enabled: true
+          thanosServiceMonitor:
+            enabled: true
+          prometheusSpec:
+            thanos:
+              image: quay.io/thanos/thanos:v0.28.1
+              version: v0.28.1
+              objectStorageConfig:
+                key: object-store.yaml
+                name: thanos-objstore-config
+              logLevel: debug
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 5Gi
+          ingress:
+            enabled: true
+            hosts:
+              - prometheus.192-168-49-2.nip.io
+            paths:
+              - /
+
