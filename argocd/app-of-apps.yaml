@@ -10,7 +10,7 @@ spec:
     targetRevision: rancher
   destination:
     namespace: argocd
-    name: cluster1-node1
+    name: in-cluster
   project: monitoring
   syncPolicy:
     automated:
