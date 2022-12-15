@@ -11,6 +11,8 @@ spec:
     namespace: cattle-monitoring-system
   project: monitoring
   syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
     automated:
       prune: true
       selfHeal: true
