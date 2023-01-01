@@ -7,7 +7,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    name: cluster1-node1
+    name: cluster1
     namespace: cattle-monitoring-system
   project: monitoring
   syncPolicy:
