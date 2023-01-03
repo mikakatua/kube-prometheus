@@ -30,7 +30,8 @@ spec:
             rkePathPrefix: ''
             rkeWindowsPathPrefix: ''
             systemDefaultRegistry: ''
-            systemProjectId: p-8pt65
+            systemProjectId: p-8pt65 # System
             url: https://rancher.mydomain.net
-          systemDefaultRegistry: ''
-
+        image:
+          repository: rancher/shell
+          tag: v0.1.18
