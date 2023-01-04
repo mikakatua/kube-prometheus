@@ -22,23 +22,6 @@ spec:
       releaseName: rancher-monitoring
       skipCrds: true
       values: |-
-        global:
-          cattle:
-            clusterId: c-l6mmz
-            clusterName: cluster1
-            rkePathPrefix: ''
-            rkeWindowsPathPrefix: ''
-            systemDefaultRegistry: ''
-            systemProjectId: p-8pt65
-            url: https://rancher.mydomain.net
-          systemDefaultRegistry: ''
-        ingressNginx:
-          enabled: true
-        prometheus:
-          prometheusSpec:
-            evaluationInterval: 1m
-            retentionSize: 5GiB
-            scrapeInterval: 1m
         rkeControllerManager:
           enabled: true
         rkeEtcd:
@@ -47,4 +30,54 @@ spec:
           enabled: true
         rkeScheduler:
           enabled: true
-
+        ingressNginx:
+          enabled: true
+        global:
+          cattle:
+            clusterId: c-l6mmz
+            clusterName: cluster1
+            rkePathPrefix: ''
+            rkeWindowsPathPrefix: ''
+            systemDefaultRegistry: ''
+            systemProjectId: p-8pt65 # System
+            url: https://rancher.mydomain.net
+          kubectl:
+           repository: rancher/kubectl
+           tag: v1.23.7
+        alertmanager:
+          alertmanagerSpec:
+            image:
+              repository: rancher/mirrored-prometheus-alertmanager
+              tag: v0.24.0
+        grafana:
+          proxy:
+            image:
+              repository: rancher/mirrored-library-nginx
+              tag: 1.23.2-alpine
+        prometheusOperator:
+          admissionWebhooks:
+            patch:
+              image:
+                repository: rancher/mirrored-ingress-nginx-kube-webhook-certgen
+                tag: v1.3.0
+          image:
+            repository: rancher/mirrored-prometheus-operator-prometheus-operator
+            tag: v0.59.1
+          prometheusConfigReloaderImage:
+            repository: rancher/mirrored-prometheus-operator-prometheus-config-reloader
+            tag: v0.59.1
+          thanosImage:
+            repository: rancher/mirrored-thanos-thanos
+            tag: v0.28.0
+        prometheus:
+          prometheusSpec:
+            evaluationInterval: 1m
+            retentionSize: 5GiB
+            scrapeInterval: 1m
+            image:
+              repository: rancher/mirrored-prometheus-prometheus
+              tag: v2.38.0
+            proxy:
+              image:
+                repository: rancher/mirrored-library-nginx
+                tag: 1.23.2-alpine
