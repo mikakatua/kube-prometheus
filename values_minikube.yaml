@@ -1,60 +1,40 @@
 alertmanager:
-  storage:
-    volumeClaimTemplate:
-      spec:
-        storageClassName: gluster
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 2Gi
   ingress:
     enabled: true
     hosts:
       - alertmanager.192-168-49-2.nip.io
-    paths:
-      - /
-
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 2Gi
+ 
 grafana:
-  adminPassword: admin
   serviceMonitor:
     labels:
       release: kps
-  persistence:
-    type: pvc
-    enabled: true
-    # storageClassName: default
-    accessModes:
-      - ReadWriteOnce
-    size: 2Gi
   ingress:
     enabled: true
     hosts:
       - grafana.192-168-49-2.nip.io
-    path: /
+  persistence:
+    enabled: true
+    size: 2Gi
+  adminPassword: admin
 
 prometheus:
-  prometheusSpec:
-    secrets:
-    - etcd-certs
-    prometheusSpec:
-      storageSpec:
-        volumeClaimTemplate:
-          spec:
-            resources:
-              requests:
-                storage: 5Gi 
   ingress:
     enabled: true
     hosts:
       - prometheus.192-168-49-2.nip.io
-    paths:
-      - /
-
-kubeEtcd:
-  serviceMonitor:
-    scheme: https
-    insecureSkipVerify: false
-    caFile:   /etc/prometheus/secrets/etcd-certs/ca.crt
-    certFile: /etc/prometheus/secrets/etcd-certs/server.crt
-    keyFile:  /etc/prometheus/secrets/etcd-certs/server.key
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          resources:
+            requests:
+              storage: 5Gi 
 
